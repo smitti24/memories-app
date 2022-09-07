@@ -1,8 +1,10 @@
-import React, { useState } from "react";
-import { Input, Button, Typography } from "@material-tailwind/react";
+import React, { useState, useEffect } from "react";
+import { Input, Button } from "@material-tailwind/react";
 import FileBase from "react-file-base64";
+import { useDispatch, useSelector } from "react-redux";
+import { createPost, updatePost } from "../../actions/posts";
 
-function Form() {
+function Form({ currentId, setCurrentId }) {
   const [postData, setPostData] = useState({
     creator: "",
     title: "",
@@ -10,10 +12,36 @@ function Form() {
     tags: "",
     selectedFile: "",
   });
+
+  const post = useSelector((state) =>
+    currentId ? state.posts.find((post) => post._id === currentId) : null
+  );
+
+  const dispatch = useDispatch();
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(postData);
+    currentId
+      ? dispatch(updatePost(currentId, postData))
+      : dispatch(createPost(postData));
+
+    clear();
   };
+
+  const clear = () => {
+    setCurrentId(null);
+    setPostData({
+      creator: "",
+      title: "",
+      message: "",
+      tags: "",
+      selectedFile: "",
+    });
+  };
+
+  useEffect(() => {
+    post && setPostData(post);
+  }, [post]);
 
   return (
     <>
@@ -23,7 +51,10 @@ function Form() {
         noValidate
         onSubmit={handleSubmit}
       >
-        <h1 className="text-2xl font-bold mb-4">Create a memory</h1>
+        <h1 className="text-2xl font-bold mb-4">
+          {" "}
+          {currentId ? "Editing" : "Create"} a memory
+        </h1>
         <div className="pb-4">
           <Input
             label="Creator"
@@ -48,17 +79,17 @@ function Form() {
             onChange={(e) =>
               setPostData({ ...postData, message: e.target.value })
             }
-            value={postData.tags}
+            value={postData.message}
           />
         </div>
         <div className="pb-4">
           <Input
             label="Tags"
             onChange={(e) => setPostData({ ...postData, tags: e.target.value })}
-            value={postData.creator}
+            value={postData.tags}
           />
         </div>
-        <div className="pb-4">
+        <div className="pb-4 text-start">
           <FileBase
             type="file"
             multiple={false}
@@ -73,7 +104,12 @@ function Form() {
           </Button>
         </div>
         <div>
-          <Button className="w-full" color="red" variant="outlined">
+          <Button
+            className="w-full"
+            color="red"
+            variant="outlined"
+            onClick={() => clear()}
+          >
             Clear
           </Button>
         </div>

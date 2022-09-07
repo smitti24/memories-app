@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import memories from "../src/assets/images/memories.png";
 import Form from "./components/form/Form";
 import Posts from "./components/posts/Posts";
@@ -6,10 +6,11 @@ import { useDispatch } from "react-redux";
 import { getPosts } from "./actions/posts";
 function App() {
   const dispatch = useDispatch();
+  const [currentId, setCurrentId] = useState(null);
 
   useEffect(() => {
     dispatch(getPosts());
-  }, [dispatch]);
+  }, [currentId, dispatch]);
 
   return (
     <div>
@@ -25,12 +26,12 @@ function App() {
           ></img>
         </div>
 
-        <div className="flex flex-col sm:grid sm:grid-cols-12 m-auto my-8 mx-3">
-          <div className="sm:col-span-8">
-            <Posts />
+        <div className="flex flex-col-reverse md:flex-col sm:grid sm:grid-cols-12 m-auto my-8 mx-3">
+          <div className="m-auto justify-center mt-4 sm:col-span-8 sm:m-auto">
+            <Posts setCurrentId={setCurrentId} />
           </div>
-          <div className="sm:col-span-4">
-            <Form />
+          <div className="sm:col-span-4 mb-8">
+            <Form currentId={currentId} setCurrentId={setCurrentId} />
           </div>
         </div>
       </div>
