@@ -9,8 +9,12 @@ import {
 import moment from "moment";
 import { AiFillLike, AiFillDelete } from "react-icons/ai";
 import { FaEdit } from "react-icons/fa";
+import { useDispatch } from "react-redux";
+import { deletePost, likePost } from "../../../actions/posts";
 
 function Post({ postData, setCurrentId }) {
+  const dispatch = useDispatch();
+
   return (
     <>
       <Card className="w-96">
@@ -36,17 +40,16 @@ function Post({ postData, setCurrentId }) {
             <Typography variant="h5" className="mb-2">
               {postData?.creator}
             </Typography>
-            <p></p>
             <Typography variant="h8" className="mb-2">
               {moment(postData?.createdAt).fromNow()}
             </Typography>
           </div>
 
           <div>
-            <Typography variant="small" className="mb-2">
-              <div>
-                {postData.tags.map((tag) => (
-                  <p>{tag}</p>
+            <Typography variant="small" className="mb-2" component="div">
+              <div className="flex">
+                {postData?.tags?.map((tag) => (
+                  <div>#{tag}</div>
                 ))}
               </div>
             </Typography>
@@ -57,12 +60,25 @@ function Post({ postData, setCurrentId }) {
           </Typography>
         </CardBody>
         <CardFooter divider className="flex items-center justify-between py-3">
-          <Typography variant="large">
-            <AiFillLike />
+          <Typography
+            variant="large"
+            className="hover:cursor-pointer"
+            onClick={() => dispatch(likePost(postData?._id))}
+          >
+            <div className="align-middle flex">
+              <AiFillLike className="text-2xl" />
+              <span>Like {postData?.likedCount}</span>
+            </div>
           </Typography>
-          <Typography variant="large" color="gray" className="flex gap-1">
-            <div className="align-middle">
-              <AiFillDelete />
+          <Typography
+            variant="large"
+            color="gray"
+            className="hover:cursor-pointer"
+            onClick={() => dispatch(deletePost(postData?._id))}
+          >
+            <div className="align-middle flex">
+              <AiFillDelete className="text-2xl" />
+              <span>Delete</span>
             </div>
           </Typography>
         </CardFooter>

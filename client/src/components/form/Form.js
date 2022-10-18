@@ -85,7 +85,9 @@ function Form({ currentId, setCurrentId }) {
         <div className="pb-4">
           <Input
             label="Tags"
-            onChange={(e) => setPostData({ ...postData, tags: e.target.value })}
+            onChange={(e) =>
+              setPostData({ ...postData, tags: e.target.value.split(",") })
+            }
             value={postData.tags}
           />
         </div>
