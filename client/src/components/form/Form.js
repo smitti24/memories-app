@@ -5,8 +5,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { createPost, updatePost } from "../../actions/posts";
 
 function Form({ currentId, setCurrentId }) {
+  const user = JSON.parse(localStorage.getItem("profile"));
   const [postData, setPostData] = useState({
-    creator: "",
     title: "",
     message: "",
     tags: "",
@@ -22,8 +22,10 @@ function Form({ currentId, setCurrentId }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     currentId
-      ? dispatch(updatePost(currentId, postData))
-      : dispatch(createPost(postData));
+      ? dispatch(
+          updatePost(currentId, { ...postData, name: user?.result?.name })
+        )
+      : dispatch(createPost({ ...postData, name: user?.result?.name }));
 
     clear();
   };
@@ -31,7 +33,6 @@ function Form({ currentId, setCurrentId }) {
   const clear = () => {
     setCurrentId(null);
     setPostData({
-      creator: "",
       title: "",
       message: "",
       tags: "",
@@ -42,6 +43,14 @@ function Form({ currentId, setCurrentId }) {
   useEffect(() => {
     post && setPostData(post);
   }, [post]);
+
+  if (!user?.result?.name) {
+    return (
+      <div className="">
+        <h1>TESTING</h1>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -55,15 +64,6 @@ function Form({ currentId, setCurrentId }) {
           {" "}
           {currentId ? "Editing" : "Create"} a memory
         </h1>
-        <div className="pb-4">
-          <Input
-            label="Creator"
-            onChange={(e) =>
-              setPostData({ ...postData, creator: e.target.value })
-            }
-            value={postData.creator}
-          />
-        </div>
         <div className="pb-4">
           <Input
             label="Title"

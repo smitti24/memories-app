@@ -38,7 +38,7 @@ function Post({ postData, setCurrentId }) {
         <CardBody>
           <div className="flex justify-between">
             <Typography variant="h5" className="mb-2">
-              {postData?.creator}
+              {postData?.name}
             </Typography>
             <Typography variant="h8" className="mb-2">
               {moment(postData?.createdAt).fromNow()}
