@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Input, Button } from "@material-tailwind/react";
+import { Input, Button, Typography } from "@material-tailwind/react";
 import FileBase from "react-file-base64";
 import { useDispatch, useSelector } from "react-redux";
 import { createPost, updatePost } from "../../actions/posts";
@@ -21,7 +21,7 @@ function Form({ currentId, setCurrentId }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    currentId
+    currentId === 0
       ? dispatch(
           updatePost(currentId, { ...postData, name: user?.result?.name })
         )
@@ -46,8 +46,10 @@ function Form({ currentId, setCurrentId }) {
 
   if (!user?.result?.name) {
     return (
-      <div className="">
-        <h1>TESTING</h1>
+      <div elevation={6}>
+        <Typography variant="h6" align="center">
+          Please Sign In to create your own memories and like other's memories.
+        </Typography>
       </div>
     );
   }

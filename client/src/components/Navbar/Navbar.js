@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@material-tailwind/react/components/Button";
 import { useDispatch } from "react-redux";
+import decode from "jwt-decode";
 
 function Navbar() {
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("profile")));
@@ -12,12 +13,20 @@ function Navbar() {
 
   const logout = () => {
     dispatch({ type: "LOGOUT" });
+
     navigate("/");
+
     setUser(null);
   };
 
   useEffect(() => {
-    // const token = user?.token;
+    const token = user?.token;
+
+    if (token) {
+      const decodedToken = decode(token);
+
+      if (decodedToken.exp * 1000 < new Date().getTime()) logout();
+    }
 
     setUser(JSON.parse(localStorage.getItem("profile")));
   }, [location]);
@@ -46,7 +55,7 @@ function Navbar() {
               alt={user?.result?.name}
             ></img>
             <div className="flex items-center justify-center md:mx-2 w-full text-2xl">
-              {user?.result.name}
+              {user?.result?.name}
             </div>
           </div>
 

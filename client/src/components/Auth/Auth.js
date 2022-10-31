@@ -36,11 +36,11 @@ const Auth = () => {
   };
 
   const googleSuccess = async (credentialResponse) => {
-    const results = jwt(credentialResponse?.credential);
+    const result = jwt(credentialResponse?.credential);
     const token = credentialResponse?.credential;
 
     try {
-      dispatch({ type: "AUTH", data: { results, token } });
+      dispatch({ type: "AUTH", data: { result, token } });
       navigate("/");
     } catch (error) {
       console.log(error);
